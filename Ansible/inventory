@@ -8,4 +8,4 @@ ansible_python_interpreter=/usr/bin/python3
 
 [servers]
 # monitoring-server ansible_host=<placeholder_monitoring_server>
-monitoring-server ansible_host=172.191.209.24
+monitoring-server ansible_host=172.191.228.82

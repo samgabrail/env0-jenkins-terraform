@@ -3,16 +3,16 @@
   become_user: root
   become: true
   tasks:
-    # - name: Install pip3 and unzip
-    #   apt:
-    #     update_cache: yes
-    #     pkg:
-    #     - python3-pip
-    #     - unzip
-    #   register: result
-    #   until: result is not failed
-    #   retries: 5
-    #   delay: 5
+    - name: Install pip3 and unzip
+      apt:
+        update_cache: yes
+        pkg:
+        - python3-pip
+        - unzip
+      register: result
+      until: result is not failed
+      retries: 5
+      delay: 5
     - name: Add Docker GPG apt Key
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
@@ -33,7 +33,6 @@
       file:
         path: /opt/docker-compose
         state: directory
-
     - name: Copy Docker Compose file
       copy:
         content: |
@@ -50,8 +49,7 @@
               ports:
                 - "3000:3000"
         dest: /opt/docker-compose/docker-compose.yml
-
     - name: Run Docker Compose
-      command: docker-compose up -d
+      command: docker compose up -d
       args:
         chdir: /opt/docker-compose
