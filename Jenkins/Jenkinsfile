@@ -7,13 +7,15 @@ pipeline {
         stage('Terraform') {
             steps {
                 script {
-                    dir('Terraform') {
-                        sh "terraform init"
-                        sh "terraform validate"
-                        sh "terraform ${params.ACTION} -auto-approve"
-                        if(params.ACTION == 'apply') {
-                            def ip_address = sh(script: "terraform output ip_address", returnStdout: true).trim()
-                            writeFile file: '../Ansible/inventory', text: "monitoring-server ansible_host=${ip_address}"
+                    withCredentials([azureServicePrincipal('tf-1')]) {
+                        dir('Terraform') {
+                            sh "terraform init"
+                            sh "terraform validate"
+                            sh "terraform ${params.ACTION} -auto-approve"
+                            if(params.ACTION == 'apply') {
+                                def ip_address = sh(script: "terraform output ip_address", returnStdout: true).trim()
+                                writeFile file: '../Ansible/inventory', text: "monitoring-server ansible_host=${ip_address}"
+                            }
                         }
                     }
                 }
