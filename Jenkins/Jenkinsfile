@@ -1,23 +1,27 @@
 pipeline {
-    agent any 
+    agent any
     parameters {
         choice(name: 'ACTION', choices: ['apply', 'destroy'], description: 'What action should Terraform take?')
+    }
+    environment {
+        ARM_CLIENT_ID = credentials('azure-client-id')
+        ARM_CLIENT_SECRET = credentials('azure-client-secret')
+        ARM_SUBSCRIPTION_ID = credentials('azure-subscription-id')
+        ARM_TENANT_ID = credentials('azure-tenant-id')
     }
     stages {
         stage('Terraform') {
             steps {
                 script {
-                    withCredentials([azureServicePrincipal('tf-1')]) {
                         dir('Terraform') {
-                            sh "terraform init"
-                            sh "terraform validate"
+                            sh 'terraform init'
+                            sh 'terraform validate'
                             sh "terraform ${params.ACTION} -auto-approve"
-                            if(params.ACTION == 'apply') {
-                                def ip_address = sh(script: "terraform output ip_address", returnStdout: true).trim()
-                                writeFile file: '../Ansible/inventory', text: "monitoring-server ansible_host=${ip_address}"
+                            if (params.ACTION == 'apply') {
+                            def ip_address = sh(script: 'terraform output ip_address', returnStdout: true).trim()
+                            writeFile file: '../Ansible/inventory', text: "monitoring-server ansible_host=${ip_address}"
                             }
                         }
-                    }
                 }
             }
         }
@@ -27,7 +31,7 @@ pipeline {
             }
             steps {
                 dir('Ansible') {
-                    sh "ansible-playbook -i inventory appPlaybook.yaml"
+                    sh 'ansible-playbook -i inventory appPlaybook.yaml'
                 }
             }
         }
