@@ -18,6 +18,7 @@ pipeline {
                             sh 'terraform validate'
                             sh "terraform ${params.ACTION} -auto-approve"
                             if (params.ACTION == 'apply') {
+                            sh "terraform ${params.ACTION} -auto-approve"
                             def ip_address = sh(script: 'terraform output ip_address', returnStdout: true).trim()
                             writeFile file: '../Ansible/inventory', text: "monitoring-server ansible_host=${ip_address}"
                             }
