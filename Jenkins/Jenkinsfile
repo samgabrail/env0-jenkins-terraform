@@ -39,6 +39,9 @@ pipeline {
             }
         }
         stage('Output URLs') {
+            when {
+                expression { params.ACTION == 'apply' }
+            }
             steps {
                 script {
                     def ip_address = sh(script: 'terraform -chdir=Terraform output -raw public_ip', returnStdout: true).trim()
@@ -51,6 +54,9 @@ pipeline {
             }
         }
         stage('Archive URLs') {
+            when {
+                expression { params.ACTION == 'apply' }
+            }
             steps {
                 archiveArtifacts artifacts: 'urls.txt', onlyIfSuccessful: true
             }
