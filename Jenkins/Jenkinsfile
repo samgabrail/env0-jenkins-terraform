@@ -31,8 +31,10 @@ pipeline {
                 expression { params.ACTION == 'apply' }
             }
             steps {
-                dir('Ansible') {
-                    sh 'ansible-playbook -i inventory appPlaybook.yaml'
+                withCredentials([sshUserPrivateKey(credentialsId: 'sshCredentials', keyFileVariable: 'SSH_KEY', usernameVariable: 'SSH_USER')]) {
+                    dir('Ansible') {
+                        sh "ansible-playbook -i inventory appPlaybook.yaml --private-key=$SSH_KEY -u $SSH_USER"
+                    }
                 }
             }
         }
