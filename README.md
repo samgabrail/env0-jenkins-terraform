@@ -45,7 +45,7 @@ RUN pip install --upgrade pip cffi && \
 USER jenkins
 ```
 
-### Build Docker Image
+### Build the Docker Image
 
 Now we can build the docker image using the following command:
 
@@ -89,10 +89,14 @@ From the main Jenkins page, click on the `New Item` button. Then give it a name 
 
 Now that we have Jenkins running, we can configure Terraform.
 
-
 ## Configure Azure
 
 Follow the guide [Azure Provider: Authenticating using a Service Principal with a Client Secret](https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/guides/service_principal_client_secret#creating-a-service-principal-in-the-azure-portal) to create an application and service principal.
+
+## Jenkins Credentials
+
+We now need to add the Azure credentials and the private key and username for Ansible to access the generated VM.
+
 
 
 ### Store Jenkins Data
