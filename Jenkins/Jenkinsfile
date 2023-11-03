@@ -26,6 +26,17 @@ pipeline {
                 }
             }
         }
+        stage('Delay') {
+            when {
+                expression { params.ACTION == 'apply' }
+            }
+            steps {
+                script {
+                    echo 'Waiting for SSH agent...'
+                    sleep 120 // waits for 120 seconds before continuing
+                }
+            }
+        }
         stage('Ansible') {
             when {
                 expression { params.ACTION == 'apply' }
